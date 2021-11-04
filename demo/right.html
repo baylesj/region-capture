@@ -1,6 +1,7 @@
 <html>
   <head>
     <link rel="icon" href="data:;base64,=" />
+    <link rel="stylesheet" href="column.css" />
   </head>
   <body>
     <h1>Video Conferencing App</h1>
@@ -9,6 +10,7 @@
     <br /><br /><br />
     <button id="button0" onclick="OnSourceSelected(0);" disabled>Source #1</button>
     <button id="button1" onclick="OnSourceSelected(1);" disabled>Source #2</button>
+    <button id="button2" onclick="OnSourceSelected(2);" disabled>Source #3</button>
     <button id="uncropped" onclick="OnUncroppedSelected();" disabled>Uncropped</button>
     <br />
     <p>
@@ -16,6 +18,14 @@
       into picture-in-picture mode.
     </p>
     <button id="pipButton" onclick="OnPipClicked();" disabled>PiP</button>
+
+    <div class="rowContentHolder">
+      <div id="div3" class="rowContentA">
+        <h1>Content 3</h1>
+        <p id="animation1"></p>
+      </div>
+    </div>
+
     <script>
       const video = document.getElementById("video");
       const pipButton = document.getElementById("pipButton");
@@ -50,7 +60,7 @@
       }
 
       function IsReady() {
-        return cropIDs.length == 2;
+        return cropIDs.length == 3;
       }
 
       async function OnSourceSelected(source) {
@@ -83,6 +93,10 @@
             init();
           } else if (msg.cropID) {
             cropIDs.push(msg.cropID);
+            if (cropIDs.length == 2) {
+              // Add div3's ID to the end.
+              cropIDs.push(await navigator.mediaDevices.produceCropId(document.getElementById("div3")));
+            }
           }
         } catch (error) {
           console.error(`${error}`);
@@ -90,7 +104,7 @@
       }
 
       function init() {
-        ["button0", "button1", "uncropped"].forEach((buttonId) => {
+        ["button0", "button1", "button2", "uncropped"].forEach((buttonId) => {
           document.getElementById(buttonId).disabled = false;
         });
       }
